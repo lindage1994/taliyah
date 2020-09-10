@@ -25,14 +25,18 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 
+import org.iahsnil.auth.authorization.security.CommonUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -40,6 +44,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -77,15 +83,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
 	AuthenticationManager authenticationManager;
+	CommonUserDetailsService commonUserDetailsService;
 	KeyPair keyPair;
 	boolean jwtEnabled;
 
 	public AuthorizationServerConfiguration(
-			AuthenticationConfiguration authenticationConfiguration,
+			AuthenticationManager authenticationManager,
+			CommonUserDetailsService commonUserDetailsService,
 			KeyPair keyPair,
 			@Value("${security.oauth2.authorizationserver.jwt.enabled:true}") boolean jwtEnabled) throws Exception {
 
-		this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
+		this.authenticationManager = authenticationManager;
+		this.commonUserDetailsService = commonUserDetailsService;
 		this.keyPair = keyPair;
 		this.jwtEnabled = jwtEnabled;
 	}
@@ -95,19 +104,19 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 			throws Exception {
 		// @formatter:off
 		clients.inMemory()
-			.withClient("reader")
+				.withClient("reader")
 				.authorizedGrantTypes("password")
 				.secret("{noop}secret")
 				.scopes("message:read")
 				.accessTokenValiditySeconds(600_000_000)
 				.and()
-			.withClient("writer")
+				.withClient("writer")
 				.authorizedGrantTypes("password")
 				.secret("{noop}secret")
 				.scopes("message:write")
 				.accessTokenValiditySeconds(600_000_000)
 				.and()
-			.withClient("noscopes")
+				.withClient("noscopes")
 				.authorizedGrantTypes("password")
 				.secret("{noop}secret")
 				.scopes("none")
@@ -119,16 +128,16 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
 		// @formatter:off
 		endpoints
-			.authenticationManager(this.authenticationManager)
-			.tokenStore(tokenStore());
+				.authenticationManager(this.authenticationManager)
+				.userDetailsService(this.commonUserDetailsService)
+				.tokenStore(tokenStore());
 
 		if (this.jwtEnabled) {
 			endpoints
-				.accessTokenConverter(accessTokenConverter());
+					.accessTokenConverter(accessTokenConverter());
 		}
 		// @formatter:on
 	}
-
 
 	@Bean
 	public TokenStore tokenStore() {
@@ -158,27 +167,48 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 @Configuration
 class UserConfig extends WebSecurityConfigurerAdapter {
 
+	@Autowired
+	private CommonUserDetailsService commonUserDetailsService;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			.authorizeRequests()
+				.authorizeRequests()
 				.mvcMatchers("/.well-known/jwks.json").permitAll()
 				.anyRequest().authenticated()
 				.and()
-			.httpBasic()
+				.httpBasic()
 				.and()
-			.csrf().ignoringRequestMatchers((request) -> "/introspect".equals(request.getRequestURI()));
+				.csrf().ignoringRequestMatchers((request) -> "/introspect".equals(request.getRequestURI()));
+	}
+
+	/**
+	 * 注入自定义的userDetailsService实现，获取用户信息，设置密码加密方式
+	 *
+	 * @param authenticationManagerBuilder
+	 * @throws Exception
+	 */
+	@Override
+	protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		authenticationManagerBuilder
+				.userDetailsService(commonUserDetailsService)
+				.passwordEncoder(passwordEncoder());
+		// 设置手机验证码登陆的AuthenticationProvider
+//		authenticationManagerBuilder.authenticationProvider(mobileAuthenticationProvider());
+	}
+
+	/**
+	 * 将 AuthenticationManager 注册为 bean , 方便配置 oauth server 的时候使用
+	 */
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
 	}
 
 	@Bean
-	@Override
-	public UserDetailsService userDetailsService() {
-		return new InMemoryUserDetailsManager(
-				User.withDefaultPasswordEncoder()
-					.username("subject")
-					.password("password")
-					.roles("USER")
-					.build());
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }
 
@@ -210,7 +240,7 @@ class IntrospectEndpoint {
 
 		attributes.put("active", true);
 		attributes.put("exp", accessToken.getExpiration().getTime());
-		attributes.put("scope", String.join(" ", accessToken.getScope()));
+		attributes.put("scope", accessToken.getScope().stream().collect(Collectors.joining(" ")));
 		attributes.put("sub", authentication.getName());
 
 		return attributes;
