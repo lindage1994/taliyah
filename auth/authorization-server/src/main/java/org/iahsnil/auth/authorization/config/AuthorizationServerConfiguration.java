@@ -45,12 +45,14 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpoint;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
@@ -139,6 +141,14 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		// @formatter:on
 	}
 
+	@Override
+	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+		oauthServer
+				.tokenKeyAccess("permitAll()")
+				.checkTokenAccess("isAuthenticated()")
+				.passwordEncoder(NoOpPasswordEncoder.getInstance());
+	}
+
 	@Bean
 	public TokenStore tokenStore() {
 		if (this.jwtEnabled) {
@@ -195,6 +205,17 @@ class UserConfig extends WebSecurityConfigurerAdapter {
 				.passwordEncoder(passwordEncoder());
 		// 设置手机验证码登陆的AuthenticationProvider
 //		authenticationManagerBuilder.authenticationProvider(mobileAuthenticationProvider());
+	}
+
+	@Bean
+	@Override
+	public UserDetailsService userDetailsService() {
+		return new InMemoryUserDetailsManager(
+				User.withDefaultPasswordEncoder()
+						.username("subject")
+						.password("password")
+						.roles("USER")
+						.build());
 	}
 
 	/**

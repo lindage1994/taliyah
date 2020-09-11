@@ -3,6 +3,7 @@ package org.iahsnil.auth.authorization.service.provider;
 
 import org.iahsnil.auth.authorization.entity.Account;
 import org.iahsnil.auth.authorization.entity.Role;
+import org.iahsnil.common.response.ResponseBean;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +15,8 @@ import java.util.Set;
 public interface OrganizationProvider {
 
     @GetMapping(value = "/user")
-    Account getUserByUniqueId(@RequestParam("uniqueId") String uniqueId);
+    ResponseBean<Account> getUserByUniqueId(@RequestParam("uniqueId") String uniqueId);
 
     @GetMapping(value = "/role/user/{userId}")
-    Set<Role> queryRolesByUserId(@PathVariable("userId") String userId);
+    ResponseBean<Set<Role>> queryRolesByUserId(@PathVariable("userId") String userId);
 }

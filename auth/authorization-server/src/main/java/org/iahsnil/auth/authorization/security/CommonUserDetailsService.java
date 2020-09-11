@@ -1,6 +1,8 @@
 package org.iahsnil.auth.authorization.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.iahsnil.auth.authorization.entity.Account;
+import org.iahsnil.auth.authorization.entity.Role;
 import org.iahsnil.auth.authorization.service.impl.LoadUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,9 +13,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CommonUserDetailsService implements UserDetailsService {
 
@@ -30,19 +33,14 @@ public class CommonUserDetailsService implements UserDetailsService {
                 account.getEnabled(),
                 account.getAccountNonExpired(),
                 account.getCredentialsNonExpired(),
-                account.getCredentialsNonExpired(),
+                account.getAccountNonLocked(),
                 this.obtainGrantedAuthorities(account));
     }
 
-    /**
-     * 获得登录者所有角色的权限集合.
-     *
-     * @param user
-     * @return
-     */
+
     protected Set<GrantedAuthority> obtainGrantedAuthorities(Account user) {
-        Set<GrantedAuthority> roles = new HashSet<>();
-        roles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        return roles;
+        Set<Role> roles = loadUserService.queryUserRolesByUserId(user.getId());
+        log.info("user:{},roles:{}", user.getUsername(), roles);
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getCode())).collect(Collectors.toSet());
     }
 }

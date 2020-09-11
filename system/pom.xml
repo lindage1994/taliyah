@@ -9,13 +9,15 @@
     <packaging>pom</packaging>
 
     <parent>
-        <artifactId>taliyah</artifactId>
+        <artifactId>webapp-parent</artifactId>
         <groupId>org.iahsnil</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../webapps/webapp-parent/pom.xml</relativePath>
     </parent>
 
     <modules>
         <module>account</module>
+        <module>organization</module>
     </modules>
 
 

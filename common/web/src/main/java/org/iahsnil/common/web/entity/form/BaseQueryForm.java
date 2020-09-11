@@ -1,10 +1,10 @@
 package org.iahsnil.common.web.entity.form;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.springboot.cloud.common.web.entity.param.BaseParam;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.iahsnil.common.web.entity.param.BaseParam;
 import org.springframework.beans.BeanUtils;
 
 @ApiModel
