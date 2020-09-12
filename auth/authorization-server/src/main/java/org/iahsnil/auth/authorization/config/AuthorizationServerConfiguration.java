@@ -93,7 +93,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 			AuthenticationManager authenticationManager,
 			CommonUserDetailsService commonUserDetailsService,
 			KeyPair keyPair,
-			@Value("${security.oauth2.authorizationserver.jwt.enabled:true}") boolean jwtEnabled) throws Exception {
+			@Value("${security.oauth2.jwt.enabled:true}") boolean jwtEnabled) throws Exception {
 
 		this.authenticationManager = authenticationManager;
 		this.commonUserDetailsService = commonUserDetailsService;
@@ -205,17 +205,6 @@ class UserConfig extends WebSecurityConfigurerAdapter {
 				.passwordEncoder(passwordEncoder());
 		// 设置手机验证码登陆的AuthenticationProvider
 //		authenticationManagerBuilder.authenticationProvider(mobileAuthenticationProvider());
-	}
-
-	@Bean
-	@Override
-	public UserDetailsService userDetailsService() {
-		return new InMemoryUserDetailsManager(
-				User.withDefaultPasswordEncoder()
-						.username("subject")
-						.password("password")
-						.roles("USER")
-						.build());
 	}
 
 	/**
