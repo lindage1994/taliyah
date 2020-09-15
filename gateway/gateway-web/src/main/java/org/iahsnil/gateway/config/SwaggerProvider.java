@@ -1,8 +1,8 @@
 package org.iahsnil.gateway.config;
 
-import com.springboot.cloud.gateway.service.impl.RouteService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.iahsnil.gateway.service.impl.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -19,13 +19,12 @@ import java.util.List;
 public class SwaggerProvider implements SwaggerResourcesProvider {
     public static final String API_URI = "/v2/api-docs";
 
-    @Autowired
     private final RouteService routeService;
 
     @Override
     public List<SwaggerResource> get() {
         List<SwaggerResource> resources = new ArrayList<>();
-        routeService.getRouteDefinitions().stream()
+        routeService.getRouteDefinitions()
                 .forEach(routeDefinition -> routeDefinition.getPredicates().stream()
                         .filter(predicateDefinition -> "Path".equalsIgnoreCase(predicateDefinition.getName()))
                         .peek(predicateDefinition -> log.debug("路由配置参数：{}", predicateDefinition.getArgs()))

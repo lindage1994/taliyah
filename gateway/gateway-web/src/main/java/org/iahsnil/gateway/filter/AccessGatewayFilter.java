@@ -2,8 +2,8 @@ package org.iahsnil.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springboot.cloud.auth.client.service.IAuthService;
 import lombok.extern.slf4j.Slf4j;
+import org.iahsnil.auth.client.service.IAuthService;
 import org.iahsnil.gateway.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
  * 请求url权限校验
  */
 @Configuration
-@ComponentScan(basePackages = "com.springboot.cloud.auth.client")
+@ComponentScan(basePackages = "org.iahsnil.auth.client")
 @Slf4j
 public class AccessGatewayFilter implements GlobalFilter {
 

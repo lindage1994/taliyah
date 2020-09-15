@@ -2,7 +2,7 @@ package org.iahsnil.gateway.service.impl;
 
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
-import com.springboot.cloud.auth.client.service.IAuthService;
+import org.iahsnil.auth.client.service.IAuthService;
 import org.iahsnil.gateway.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
