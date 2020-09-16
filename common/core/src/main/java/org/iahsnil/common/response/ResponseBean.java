@@ -24,7 +24,7 @@ public class ResponseBean<T> {
     @ApiModelProperty(value = "处理结果描述信息")
     private String message;
     @ApiModelProperty(value = "请求结果生成时间戳")
-    private Instant time;
+    private final Instant time;
     @ApiModelProperty(value = "处理结果数据信息")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
@@ -34,7 +34,7 @@ public class ResponseBean<T> {
     }
 
     /**
-     * @param errorType
+     * @param errorType 错误类型
      */
     public ResponseBean(ErrorType errorType) {
         this.code = errorType.getCode();
@@ -43,8 +43,8 @@ public class ResponseBean<T> {
     }
 
     /**
-     * @param errorType
-     * @param data
+     * @param errorType 错误类型
+     * @param data 返回对象
      */
     public ResponseBean(ErrorType errorType, T data) {
         this(errorType);
@@ -54,9 +54,9 @@ public class ResponseBean<T> {
     /**
      * 内部使用，用于构造成功的结果
      *
-     * @param code
-     * @param message
-     * @param data
+     * @param code 成功码
+     * @param message 成功信息
+     * @param data 返回对象
      */
     private ResponseBean(String code, String message, T data) {
         this.code = code;
@@ -68,7 +68,7 @@ public class ResponseBean<T> {
     /**
      * 快速创建成功结果并返回结果数据
      *
-     * @param data
+     * @param data 成功返回对象
      * @return Result
      */
     public static <T> ResponseBean<T> success(T data) {
@@ -96,7 +96,7 @@ public class ResponseBean<T> {
     /**
      * 系统异常类没有返回数据
      *
-     * @param baseException
+     * @param baseException 系统异常
      * @return Result
      */
     public static ResponseBean<?> fail(BaseException baseException) {
@@ -106,7 +106,7 @@ public class ResponseBean<T> {
     /**
      * 系统异常类并返回结果数据
      *
-     * @param data
+     * @param data 结果数据
      * @return Result
      */
     public static <T> ResponseBean<T> fail(BaseException baseException, T data) {
@@ -116,8 +116,8 @@ public class ResponseBean<T> {
     /**
      * 系统异常类并返回结果数据
      *
-     * @param errorType
-     * @param data
+     * @param errorType 错误类型
+     * @param data 结果数据
      * @return Result
      */
     public static <T> ResponseBean<T> fail(ErrorType errorType, T data) {
@@ -127,7 +127,7 @@ public class ResponseBean<T> {
     /**
      * 系统异常类并返回结果数据
      *
-     * @param errorType
+     * @param errorType 错误类型
      * @return Result
      */
     public static ResponseBean<ErrorType> fail(ErrorType errorType) {
@@ -137,7 +137,7 @@ public class ResponseBean<T> {
     /**
      * 系统异常类并返回结果数据
      *
-     * @param data
+     * @param data 结果数据
      * @return Result
      */
     public static <T> ResponseBean<T> fail(T data) {
