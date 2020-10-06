@@ -18,7 +18,7 @@ public enum OrganizationErrorType implements ErrorType {
      */
     private String message;
 
-    OrganizationErrorType(String code, String mesg) {
+    OrganizationErrorType(String code, String message) {
         this.code = code;
         this.message = message;
     }
