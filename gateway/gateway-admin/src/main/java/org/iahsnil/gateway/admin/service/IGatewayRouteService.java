@@ -1,7 +1,7 @@
 package org.iahsnil.gateway.admin.service;
 
 
-import org.iahsnil.gateway.admin.entity.ov.GatewayRouteVo;
+import org.iahsnil.gateway.admin.entity.vo.GatewayRouteVo;
 import org.iahsnil.gateway.admin.entity.param.GatewayRouteQueryParam;
 import org.iahsnil.gateway.admin.entity.po.GatewayRoute;
 

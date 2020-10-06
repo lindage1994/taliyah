@@ -1,4 +1,4 @@
-package org.iahsnil.gateway.admin.entity.ov;
+package org.iahsnil.gateway.admin.entity.vo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -17,7 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Slf4j
-public class GatewayRouteVo extends BaseVo {
+public class GatewayRouteVo extends BaseVo<GatewayRoute> {
     private String id;
     private String routeId;
     private String description;

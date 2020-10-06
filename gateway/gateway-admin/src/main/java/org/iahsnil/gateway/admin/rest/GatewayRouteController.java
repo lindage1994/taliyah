@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.iahsnil.common.response.ResponseBean;
 import org.iahsnil.gateway.admin.entity.form.GatewayRouteForm;
 import org.iahsnil.gateway.admin.entity.form.GatewayRouteQueryForm;
-import org.iahsnil.gateway.admin.entity.ov.GatewayRouteVo;
+import org.iahsnil.gateway.admin.entity.vo.GatewayRouteVo;
 import org.iahsnil.gateway.admin.entity.param.GatewayRouteQueryParam;
 import org.iahsnil.gateway.admin.entity.po.GatewayRoute;
 import org.iahsnil.gateway.admin.service.IGatewayRouteService;

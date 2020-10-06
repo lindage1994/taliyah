@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.iahsnil.gateway.admin.config.BusConfig;
 import org.iahsnil.gateway.admin.dao.GatewayRouteMapper;
-import org.iahsnil.gateway.admin.entity.ov.GatewayRouteVo;
+import org.iahsnil.gateway.admin.entity.vo.GatewayRouteVo;
 import org.iahsnil.gateway.admin.entity.param.GatewayRouteQueryParam;
 import org.iahsnil.gateway.admin.entity.po.GatewayRoute;
 import org.iahsnil.gateway.admin.events.EventSender;
