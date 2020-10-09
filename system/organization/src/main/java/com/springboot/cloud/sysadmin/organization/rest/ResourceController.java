@@ -1,5 +1,6 @@
 package com.springboot.cloud.sysadmin.organization.rest;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.springboot.cloud.sysadmin.organization.entity.form.ResourceForm;
 import com.springboot.cloud.sysadmin.organization.entity.form.ResourceQueryForm;
 import com.springboot.cloud.sysadmin.organization.entity.param.ResourceQueryParam;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/resource")
@@ -25,7 +27,7 @@ public class ResourceController {
     @ApiOperation(value = "新增资源", notes = "新增一个资源")
     @ApiImplicitParam(name = "resourceForm", value = "新增资源form表单", required = true, dataType = "ResourceForm")
     @PostMapping
-    public ResponseBean add(@Valid @RequestBody ResourceForm resourceForm) {
+    public ResponseBean<Boolean> add(@Valid @RequestBody ResourceForm resourceForm) {
         log.debug("name:{}", resourceForm);
         Resource resource = resourceForm.toPo(Resource.class);
         return ResponseBean.success(resourceService.add(resource));
@@ -34,7 +36,7 @@ public class ResourceController {
     @ApiOperation(value = "删除资源", notes = "根据url的id来指定删除对象")
     @ApiImplicitParam(paramType = "path", name = "id", value = "资源ID", required = true, dataType = "string")
     @DeleteMapping(value = "/{id}")
-    public ResponseBean delete(@PathVariable String id) {
+    public ResponseBean<Boolean> delete(@PathVariable String id) {
         return ResponseBean.success(resourceService.delete(id));
     }
 
@@ -44,7 +46,7 @@ public class ResourceController {
             @ApiImplicitParam(name = "resourceForm", value = "资源实体", required = true, dataType = "ResourceForm")
     })
     @PutMapping(value = "/{id}")
-    public ResponseBean update(@PathVariable String id, @Valid @RequestBody ResourceForm resourceForm) {
+    public ResponseBean<Boolean> update(@PathVariable String id, @Valid @RequestBody ResourceForm resourceForm) {
         Resource resource = resourceForm.toPo(id, Resource.class);
         return ResponseBean.success(resourceService.update(resource));
     }
@@ -52,7 +54,7 @@ public class ResourceController {
     @ApiOperation(value = "获取资源", notes = "获取指定资源信息")
     @ApiImplicitParam(paramType = "path", name = "id", value = "资源ID", required = true, dataType = "string")
     @GetMapping(value = "/{id}")
-    public ResponseBean get(@PathVariable String id) {
+    public ResponseBean<Resource> get(@PathVariable String id) {
         log.debug("get with id:{}", id);
         return ResponseBean.success(resourceService.get(id));
     }
@@ -63,7 +65,7 @@ public class ResourceController {
             @ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class)
     )
     @GetMapping(value = "/user/{username}")
-    public ResponseBean queryByUsername(@PathVariable String username) {
+    public ResponseBean<List<Resource>> queryByUsername(@PathVariable String username) {
         log.debug("query with username:{}", username);
         return ResponseBean.success(resourceService.query(username));
     }
@@ -73,7 +75,7 @@ public class ResourceController {
             @ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class)
     )
     @GetMapping(value = "/all")
-    public ResponseBean queryAll() {
+    public ResponseBean<List<Resource>> queryAll() {
         return ResponseBean.success(resourceService.getAll());
     }
 
@@ -83,7 +85,7 @@ public class ResourceController {
             @ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class)
     )
     @PostMapping(value = "/conditions")
-    public ResponseBean query(@Valid @RequestBody ResourceQueryForm resourceQueryForm) {
+    public ResponseBean<IPage<Resource>> query(@Valid @RequestBody ResourceQueryForm resourceQueryForm) {
         log.debug("query with name:{}", resourceQueryForm);
         return ResponseBean.success(resourceService.query(resourceQueryForm.getPage(), resourceQueryForm.toParam(ResourceQueryParam.class)));
     }

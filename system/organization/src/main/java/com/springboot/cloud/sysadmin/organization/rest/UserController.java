@@ -1,10 +1,12 @@
 package com.springboot.cloud.sysadmin.organization.rest;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.springboot.cloud.sysadmin.organization.entity.form.UserForm;
 import com.springboot.cloud.sysadmin.organization.entity.form.UserQueryForm;
 import com.springboot.cloud.sysadmin.organization.entity.form.UserUpdateForm;
 import com.springboot.cloud.sysadmin.organization.entity.param.UserQueryParam;
 import com.springboot.cloud.sysadmin.organization.entity.po.User;
+import com.springboot.cloud.sysadmin.organization.entity.vo.UserVo;
 import com.springboot.cloud.sysadmin.organization.service.IUserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,7 @@ public class UserController {
     @ApiOperation(value = "新增用户", notes = "新增一个用户")
     @ApiImplicitParam(name = "userForm", value = "新增用户form表单", required = true, dataType = "UserForm")
     @PostMapping
-    public ResponseBean add(@Valid @RequestBody UserForm userForm) {
+    public ResponseBean<Boolean> add(@Valid @RequestBody UserForm userForm) {
         log.debug("name:{}", userForm);
         User user = userForm.toPo(User.class);
         return ResponseBean.success(userService.add(user));
@@ -35,7 +37,7 @@ public class UserController {
     @ApiOperation(value = "删除用户", notes = "根据url的id来指定删除对象，逻辑删除")
     @ApiImplicitParam(paramType = "path", name = "id", value = "用户ID", required = true, dataType = "string")
     @DeleteMapping(value = "/{id}")
-    public ResponseBean delete(@PathVariable String id) {
+    public ResponseBean<Boolean> delete(@PathVariable String id) {
         return ResponseBean.success(userService.delete(id));
     }
 
@@ -43,7 +45,7 @@ public class UserController {
     @ApiImplicitParams({@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "string"),
             @ApiImplicitParam(name = "userUpdateForm", value = "用户实体", required = true, dataType = "UserUpdateForm")})
     @PutMapping(value = "/{id}")
-    public ResponseBean update(@PathVariable String id, @Valid @RequestBody UserUpdateForm userUpdateForm) {
+    public ResponseBean<Boolean> update(@PathVariable String id, @Valid @RequestBody UserUpdateForm userUpdateForm) {
         User user = userUpdateForm.toPo(User.class);
         user.setId(id);
         return ResponseBean.success(userService.update(user));
@@ -52,7 +54,7 @@ public class UserController {
     @ApiOperation(value = "获取用户", notes = "获取指定用户信息")
     @ApiImplicitParam(paramType = "path", name = "id", value = "用户ID", required = true, dataType = "string")
     @GetMapping(value = "/{id}")
-    public ResponseBean get(@PathVariable String id) {
+    public ResponseBean<UserVo> get(@PathVariable String id) {
         log.debug("get with id:{}", id);
         return ResponseBean.success(userService.get(id));
     }
@@ -61,7 +63,7 @@ public class UserController {
     @ApiImplicitParam(paramType = "query", name = "uniqueId", value = "用户唯一标识", required = true, dataType = "string")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class))
     @GetMapping
-    public ResponseBean query(@RequestParam String uniqueId) {
+    public ResponseBean<User> query(@RequestParam String uniqueId) {
         log.debug("query with username or mobile:{}", uniqueId);
         return ResponseBean.success(userService.getByUniqueId(uniqueId));
     }
@@ -70,7 +72,7 @@ public class UserController {
     @ApiImplicitParam(name = "userQueryForm", value = "用户查询参数", required = true, dataType = "UserQueryForm")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class))
     @PostMapping(value = "/conditions")
-    public ResponseBean search(@Valid @RequestBody UserQueryForm userQueryForm) {
+    public ResponseBean<?> search(@Valid @RequestBody UserQueryForm userQueryForm) {
         log.debug("search with userQueryForm:{}", userQueryForm);
         return ResponseBean.success(userService.query(userQueryForm.getPage(), userQueryForm.toParam(UserQueryParam.class)));
     }

@@ -1,5 +1,6 @@
 package com.springboot.cloud.sysadmin.organization.rest;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.springboot.cloud.sysadmin.organization.entity.form.RoleForm;
 import com.springboot.cloud.sysadmin.organization.entity.form.RoleQueryForm;
 import com.springboot.cloud.sysadmin.organization.entity.form.RoleUpdateForm;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/role")
@@ -26,7 +28,7 @@ public class RoleController {
     @ApiOperation(value = "新增角色", notes = "新增一个角色")
     @ApiImplicitParam(name = "roleForm", value = "新增角色form表单", required = true, dataType = "RoleForm")
     @PostMapping
-    public ResponseBean add(@Valid @RequestBody RoleForm roleForm) {
+    public ResponseBean<Boolean> add(@Valid @RequestBody RoleForm roleForm) {
         log.debug("name:{}", roleForm);
         Role role = roleForm.toPo(Role.class);
         return ResponseBean.success(roleService.add(role));
@@ -35,7 +37,7 @@ public class RoleController {
     @ApiOperation(value = "删除角色", notes = "根据url的id来指定删除对象")
     @ApiImplicitParam(paramType = "path", name = "id", value = "角色ID", required = true, dataType = "string")
     @DeleteMapping(value = "/{id}")
-    public ResponseBean delete(@PathVariable String id) {
+    public ResponseBean<Boolean> delete(@PathVariable String id) {
         return ResponseBean.success(roleService.delete(id));
     }
 
@@ -45,7 +47,7 @@ public class RoleController {
             @ApiImplicitParam(name = "roleForm", value = "角色实体", required = true, dataType = "RoleUpdateForm")
     })
     @PutMapping(value = "/{id}")
-    public ResponseBean update(@PathVariable String id, @Valid @RequestBody RoleUpdateForm roleUpdateForm) {
+    public ResponseBean<Boolean> update(@PathVariable String id, @Valid @RequestBody RoleUpdateForm roleUpdateForm) {
         Role role = roleUpdateForm.toPo(id, Role.class);
         return ResponseBean.success(roleService.update(role));
     }
@@ -53,14 +55,14 @@ public class RoleController {
     @ApiOperation(value = "获取角色", notes = "获取指定角色信息")
     @ApiImplicitParam(paramType = "path", name = "id", value = "角色ID", required = true, dataType = "string")
     @GetMapping(value = "/{id}")
-    public ResponseBean get(@PathVariable String id) {
+    public ResponseBean<Role> get(@PathVariable String id) {
         log.debug("get with id:{}", id);
         return ResponseBean.success(roleService.get(id));
     }
 
     @ApiOperation(value = "获取所有角色", notes = "获取所有角色")
     @GetMapping(value = "/all")
-    public ResponseBean get() {
+    public ResponseBean<List<Role>> get() {
         return ResponseBean.success(roleService.getAll());
     }
 
@@ -70,7 +72,7 @@ public class RoleController {
             @ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class)
     )
     @GetMapping(value = "/user/{userId}")
-    public ResponseBean query(@PathVariable String userId) {
+    public ResponseBean<List<Role>> query(@PathVariable String userId) {
         log.debug("query with userId:{}", userId);
         return ResponseBean.success(roleService.query(userId));
     }
@@ -81,7 +83,7 @@ public class RoleController {
             @ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class)
     )
     @PostMapping(value = "/conditions")
-    public ResponseBean query(@Valid @RequestBody RoleQueryForm roleQueryForm) {
+    public ResponseBean<IPage<Role>> query(@Valid @RequestBody RoleQueryForm roleQueryForm) {
         log.debug("query with name:{}", roleQueryForm);
         return ResponseBean.success(roleService.query(roleQueryForm.getPage(), roleQueryForm.toParam(RoleQueryParam.class)));
     }

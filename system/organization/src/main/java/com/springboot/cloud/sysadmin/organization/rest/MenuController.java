@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/menu")
@@ -25,7 +26,7 @@ public class MenuController {
     @ApiOperation(value = "新增菜单", notes = "新增一个菜单")
     @ApiImplicitParam(name = "menuForm", value = "新增菜单form表单", required = true, dataType = "MenuForm")
     @PostMapping
-    public ResponseBean add(@Valid @RequestBody MenuForm menuForm) {
+    public ResponseBean<Boolean> add(@Valid @RequestBody MenuForm menuForm) {
         log.debug("name:{}", menuForm);
         Menu menu = menuForm.toPo(Menu.class);
         return ResponseBean.success(menuService.add(menu));
@@ -34,7 +35,7 @@ public class MenuController {
     @ApiOperation(value = "删除菜单", notes = "根据url的id来指定删除对象")
     @ApiImplicitParam(paramType = "path", name = "id", value = "菜单ID", required = true, dataType = "string")
     @DeleteMapping(value = "/{id}")
-    public ResponseBean delete(@PathVariable String id) {
+    public ResponseBean<Boolean> delete(@PathVariable String id) {
         return ResponseBean.success(menuService.delete(id));
     }
 
@@ -44,7 +45,7 @@ public class MenuController {
             @ApiImplicitParam(name = "menuForm", value = "菜单实体", required = true, dataType = "MenuForm")
     })
     @PutMapping(value = "/{id}")
-    public ResponseBean update(@PathVariable String id, @Valid @RequestBody MenuForm menuForm) {
+    public ResponseBean<Boolean> update(@PathVariable String id, @Valid @RequestBody MenuForm menuForm) {
         Menu menu = menuForm.toPo(Menu.class);
         menu.setId(id);
         return ResponseBean.success(menuService.update(menu));
@@ -53,7 +54,7 @@ public class MenuController {
     @ApiOperation(value = "获取菜单", notes = "获取指定菜单信息")
     @ApiImplicitParam(paramType = "path", name = "id", value = "菜单ID", required = true, dataType = "string")
     @GetMapping(value = "/{id}")
-    public ResponseBean get(@PathVariable String id) {
+    public ResponseBean<Menu> get(@PathVariable String id) {
         log.debug("get with id:{}", id);
         return ResponseBean.success(menuService.get(id));
     }
@@ -64,7 +65,7 @@ public class MenuController {
             @ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class)
     )
     @GetMapping
-    public ResponseBean query(@RequestParam String name) {
+    public ResponseBean<List<Menu>> query(@RequestParam String name) {
         log.debug("query with name:{}", name);
         MenuQueryParam menuQueryParam = new MenuQueryParam(name);
         return ResponseBean.success(menuService.query(menuQueryParam));
@@ -76,7 +77,7 @@ public class MenuController {
             @ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class)
     )
     @PostMapping(value = "/conditions")
-    public ResponseBean search(@Valid @RequestBody MenuQueryForm menuQueryForm) {
+    public ResponseBean<List<Menu>> search(@Valid @RequestBody MenuQueryForm menuQueryForm) {
         log.debug("search with menuQueryForm:{}", menuQueryForm);
         return ResponseBean.success(menuService.query(menuQueryForm.toParam(MenuQueryParam.class)));
     }
@@ -84,7 +85,7 @@ public class MenuController {
     @ApiOperation(value = "根据父id查询菜单", notes = "根据父id查询菜单列表")
     @ApiImplicitParam(paramType = "path", name = "id", value = "菜单父ID", required = true, dataType = "string")
     @GetMapping(value = "/parent/{id}")
-    public ResponseBean search(@PathVariable String id) {
+    public ResponseBean<List<Menu>> search(@PathVariable String id) {
         log.debug("query with parent id:{}", id);
         return ResponseBean.success(menuService.queryByParentId(id));
     }

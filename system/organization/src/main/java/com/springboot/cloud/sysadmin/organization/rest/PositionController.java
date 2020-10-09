@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/position")
@@ -33,7 +34,7 @@ public class PositionController {
     @ApiOperation(value = "删除职位", notes = "根据url的id来指定删除对象")
     @ApiImplicitParam(paramType = "path", name = "id", value = "职位ID", required = true, dataType = "string")
     @DeleteMapping(value = "/{id}")
-    public ResponseBean delete(@PathVariable String id) {
+    public ResponseBean<Boolean> delete(@PathVariable String id) {
         return ResponseBean.success(positionService.delete(id));
     }
 
@@ -43,7 +44,7 @@ public class PositionController {
             @ApiImplicitParam(name = "positionForm", value = "职位实体", required = true, dataType = "PositionForm")
     })
     @PutMapping(value = "/{id}")
-    public ResponseBean update(@PathVariable String id, @Valid @RequestBody PositionForm positionForm) {
+    public ResponseBean<Boolean> update(@PathVariable String id, @Valid @RequestBody PositionForm positionForm) {
         Position position = positionForm.toPo(Position.class);
         position.setId(id);
         return ResponseBean.success(positionService.update(position));
@@ -52,7 +53,7 @@ public class PositionController {
     @ApiOperation(value = "获取职位", notes = "获取指定职位信息")
     @ApiImplicitParam(paramType = "path", name = "id", value = "职位ID", required = true, dataType = "string")
     @GetMapping(value = "/{id}")
-    public ResponseBean get(@PathVariable String id) {
+    public ResponseBean<Position> get(@PathVariable String id) {
         log.debug("get with id:{}", id);
         return ResponseBean.success(positionService.get(id));
     }
@@ -63,7 +64,7 @@ public class PositionController {
             @ApiResponse(code = 200, message = "处理成功", response = ResponseBean.class)
     )
     @GetMapping
-    public ResponseBean query(@RequestParam String name) {
+    public ResponseBean<List<Position>> query(@RequestParam String name) {
         log.debug("query with name:{}", name);
         return ResponseBean.success(positionService.query(new PositionQueryParam(name)));
     }
