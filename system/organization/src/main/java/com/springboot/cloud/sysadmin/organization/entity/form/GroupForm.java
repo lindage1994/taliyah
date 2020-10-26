@@ -4,10 +4,12 @@ import com.springboot.cloud.sysadmin.organization.entity.po.Group;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.iahsnil.common.web.entity.form.BaseForm;
 
 import javax.validation.constraints.NotBlank;
 
+@EqualsAndHashCode(callSuper = true)
 @ApiModel
 @Data
 public class GroupForm extends BaseForm<Group> {

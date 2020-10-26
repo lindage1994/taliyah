@@ -3,14 +3,16 @@ package org.iahsnil.common.web.entity.form;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.iahsnil.common.web.entity.param.BaseParam;
 import org.springframework.beans.BeanUtils;
 
+@EqualsAndHashCode(callSuper = true)
 @ApiModel
 @Slf4j
 @Data
-public class BaseQueryForm<P extends BaseParam> extends BaseForm {
+public class BaseQueryForm<P extends BaseParam<?>> extends BaseForm {
     /**
      * 分页查询的参数，当前页数
      */
