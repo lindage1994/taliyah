@@ -1,6 +1,9 @@
 package com.springboot.cloud.sysadmin.organization.service.impl;
 
 
+import com.alicp.jetcache.anno.CacheInvalidate;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.cloud.sysadmin.organization.dao.MenuMapper;
@@ -22,19 +25,19 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
     }
 
     @Override
-//    @CacheInvalidate(name = "menu::", key = "#id")
+    @CacheInvalidate(name = "menu::", key = "#id")
     public boolean delete(String id) {
         return this.removeById(id);
     }
 
     @Override
-//    @CacheInvalidate(name = "menu::", key = "#menu.id")
+    @CacheInvalidate(name = "menu::", key = "#menu.id")
     public boolean update(Menu menu) {
         return this.updateById(menu);
     }
 
     @Override
-//    @Cached(name = "menu::", key = "#id", cacheType = CacheType.BOTH)
+    @Cached(name = "menu::", key = "#id", cacheType = CacheType.BOTH)
     public Menu get(String id) {
         return this.getById(id);
     }

@@ -1,7 +1,7 @@
 package com.springboot.cloud.sysadmin.organization.service.impl;
 
-//import com.alicp.jetcache.anno.CacheType;
-//import com.alicp.jetcache.anno.Cached;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -39,7 +39,7 @@ public class RoleResourceService extends ServiceImpl<RoleResourceMapper, RoleRes
     }
 
     @Override
-//    @Cached(area = "shortTime", name = "resource4role::", key = "#roleId", cacheType = CacheType.BOTH)
+    @Cached(area = "shortTime", name = "resource4role::", key = "#roleId", cacheType = CacheType.BOTH)
     public Set<String> queryByRoleId(String roleId) {
         QueryWrapper<RoleResource> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("role_id", roleId);

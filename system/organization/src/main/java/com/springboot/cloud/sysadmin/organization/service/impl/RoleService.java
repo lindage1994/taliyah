@@ -1,8 +1,8 @@
 package com.springboot.cloud.sysadmin.organization.service.impl;
 
-//import com.alicp.jetcache.anno.CacheInvalidate;
-//import com.alicp.jetcache.anno.CacheType;
-//import com.alicp.jetcache.anno.Cached;
+import com.alicp.jetcache.anno.CacheInvalidate;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -41,14 +41,14 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> implements IRoleS
     }
 
     @Override
-//    @CacheInvalidate(name = "role::", key = "#id")
+    @CacheInvalidate(name = "role::", key = "#id")
     public boolean delete(String id) {
         roleResourceService.removeByRoleId(id);
         return this.removeById(id);
     }
 
     @Override
-//    @CacheInvalidate(name = "role::", key = "#role.id")
+    @CacheInvalidate(name = "role::", key = "#role.id")
     public boolean update(Role role) {
         boolean isSuccess = this.updateById(role);
         roleResourceService.saveBatch(role.getId(), role.getResourceIds());
@@ -56,7 +56,7 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> implements IRoleS
     }
 
     @Override
-//    @Cached(name = "role::", key = "#id", cacheType = CacheType.BOTH)
+    @Cached(name = "role::", key = "#id", cacheType = CacheType.BOTH)
     public Role get(String id) {
         Role role = this.getById(id);
         if (Objects.isNull(role)) {
@@ -72,7 +72,7 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> implements IRoleS
     }
 
     @Override
-//    @Cached(name = "role4user::", key = "#userId", cacheType = CacheType.BOTH)
+    @Cached(name = "role4user::", key = "#userId", cacheType = CacheType.BOTH)
     public List<Role> query(String userId) {
         Set<String> roleIds = userRoleService.queryByUserId(userId);
         return (List<Role>) this.listByIds(roleIds);

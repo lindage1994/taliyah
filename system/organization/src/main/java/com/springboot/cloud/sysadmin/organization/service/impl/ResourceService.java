@@ -1,7 +1,7 @@
 package com.springboot.cloud.sysadmin.organization.service.impl;
 
-//import com.alicp.jetcache.anno.CacheType;
-//import com.alicp.jetcache.anno.Cached;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -50,19 +50,19 @@ public class ResourceService extends ServiceImpl<ResourceMapper, Resource> imple
     }
 
     @Override
-//    @Cached(name = "resource::", key = "#id", cacheType = CacheType.BOTH)
+    @Cached(name = "resource::", key = "#id", cacheType = CacheType.BOTH)
     public boolean delete(String id) {
         return this.removeById(id);
     }
 
     @Override
-//    @Cached(name = "resource::", key = "#resource.id", cacheType = CacheType.BOTH)
+    @Cached(name = "resource::", key = "#resource.id", cacheType = CacheType.BOTH)
     public boolean update(Resource resource) {
         return this.updateById(resource);
     }
 
     @Override
-//    @Cached(name = "resource::", key = "#id", cacheType = CacheType.BOTH)
+    @Cached(name = "resource::", key = "#id", cacheType = CacheType.BOTH)
     public Resource get(String id) {
         return this.getById(id);
     }
