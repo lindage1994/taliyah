@@ -64,43 +64,28 @@ jetcache:
   remote:
     # 默认2小时的远程缓存
     default:
-      type: redis
+      type: redis.lettuce
       expireAfterWriteInMillis: 43200000
       keyConvertor: fastjson
       valueEncoder: kryo
       valueDecoder: kryo
-      poolConfig:
-        minIdle: 5
-        maxIdle: 20
-        maxTotal: 50
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
+      uri: redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}/
     # 长时远程緩存，主要用于要求时效要求一般的集中式缓存
     longTime:
-      type: redis
+      type: redis.lettuce
       expireAfterWriteInMillis: 7200000
       keyConvertor: fastjson
       valueEncoder: kryo
       valueDecoder: kryo
-      poolConfig:
-        minIdle: 5
-        maxIdle: 20
-        maxTotal: 50
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
+      uri: redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}/
     # 短時远程緩存，主要用于要求时效较高的集中式缓存
     shortTime:
-      type: redis
+      type: redis.lettuce
       expireAfterWriteInMillis: 300000
       keyConvertor: fastjson
       valueEncoder: kryo
       valueDecoder: kryo
-      poolConfig:
-        minIdle: 5
-        maxIdle: 20
-        maxTotal: 50
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
+      uri: redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}/
 
 management:
   endpoints:

@@ -5,6 +5,7 @@ package com.springboot.cloud.sysadmin.organization.service.impl;
 //import com.alicp.jetcache.anno.Cached;
 import com.alicp.jetcache.anno.CacheInvalidate;
 import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.CacheUpdate;
 import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -56,7 +57,7 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
 
     @Override
     @Transactional
-    @CacheInvalidate(name = "user::", key = "#user.id")
+    @CacheUpdate(name = "user::", key = "#user.id", value = "#user")
     public boolean update(User user) {
         if (StringUtils.isNotBlank(user.getPassword()))
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));

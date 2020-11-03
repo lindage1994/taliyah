@@ -17,11 +17,14 @@
         <groupId>org.iahsnil</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
     <dependencies>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.alicp.jetcache</groupId>
-            <artifactId>jetcache-starter-redis</artifactId>
+            <artifactId>jetcache-starter-redis-lettuce</artifactId>
         </dependency>
     </dependencies>
 
