@@ -17,7 +17,6 @@ import org.iahsnil.gateway.admin.entity.param.GatewayRouteQueryParam;
 import org.iahsnil.gateway.admin.entity.po.GatewayRoute;
 import org.iahsnil.gateway.admin.events.EventSender;
 import org.iahsnil.gateway.admin.service.IGatewayRouteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinition;
@@ -38,8 +37,11 @@ public class GatewayRouteService extends ServiceImpl<GatewayRouteMapper, Gateway
     @CreateCache(name = GATEWAY_ROUTES, cacheType = CacheType.REMOTE)
     private Cache<String, RouteDefinition> gatewayRouteCache;
 
-    @Autowired
-    private EventSender eventSender;
+    private final EventSender eventSender;
+
+    public GatewayRouteService(EventSender eventSender) {
+        this.eventSender = eventSender;
+    }
 
     @Override
     public boolean add(GatewayRoute gatewayRoute) {
@@ -73,7 +75,7 @@ public class GatewayRouteService extends ServiceImpl<GatewayRouteMapper, Gateway
     /**
      * 将数据库中json对象转换为网关需要的RouteDefinition对象
      *
-     * @param gatewayRoute
+     * @param gatewayRoute 网关对象
      * @return RouteDefinition
      */
     private RouteDefinition gatewayRouteToRouteDefinition(GatewayRoute gatewayRoute) {

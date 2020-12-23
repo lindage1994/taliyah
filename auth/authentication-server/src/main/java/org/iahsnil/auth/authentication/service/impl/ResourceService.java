@@ -73,7 +73,7 @@ public class ResourceService implements IResourceService {
     public ConfigAttribute findConfigAttributesByUrl(HttpServletRequest authRequest) {
         return resourceConfigAttributes.keySet().stream()
                 .filter(requestMatcher -> requestMatcher.matches(authRequest))
-                .map(requestMatcher -> resourceConfigAttributes.get(requestMatcher))
+                .map(resourceConfigAttributes::get)
                 .peek(urlConfigAttribute -> log.debug("url在资源池中配置：{}", urlConfigAttribute.getAttribute()))
                 .findFirst()
                 .orElse(new SecurityConfig("NONEXISTENT_URL"));
@@ -87,10 +87,6 @@ public class ResourceService implements IResourceService {
 
     /**
      * 创建RequestMatcher
-     *
-     * @param url
-     * @param method
-     * @return
      */
     private MvcRequestMatcher newMvcRequestMatcher(String url, String method) {
         return new NewMvcRequestMatcher(mvcHandlerMappingIntrospector, url, method);

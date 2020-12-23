@@ -7,7 +7,6 @@ import org.apache.commons.lang.StringUtils;
 import org.iahsnil.auth.client.provider.AuthProvider;
 import org.iahsnil.auth.client.service.IAuthService;
 import org.iahsnil.common.response.ResponseBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +20,7 @@ public class AuthService implements IAuthService {
      */
     private static final String BEARER = "Bearer ";
 
-    @Autowired
-    private AuthProvider authProvider;
+    private final AuthProvider authProvider;
 
     /**
      * jwt token 密钥，主要用于token解析，签名验证
@@ -36,6 +34,10 @@ public class AuthService implements IAuthService {
      */
     @Value("${gate.ignore.authentication.startWith}")
     private String ignoreUrls = "/oauth";
+
+    public AuthService(AuthProvider authProvider) {
+        this.authProvider = authProvider;
+    }
 
     @Override
     public ResponseBean<?>authenticate(String authentication, String url, String method) {

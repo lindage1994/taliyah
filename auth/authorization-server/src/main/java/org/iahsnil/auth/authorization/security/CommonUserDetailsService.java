@@ -20,8 +20,11 @@ import java.util.stream.Collectors;
 @Service
 public class CommonUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private LoadUserService loadUserService;
+    private final LoadUserService loadUserService;
+
+    public CommonUserDetailsService(LoadUserService loadUserService) {
+        this.loadUserService = loadUserService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {

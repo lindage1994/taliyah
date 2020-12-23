@@ -250,7 +250,7 @@ class IntrospectEndpoint {
 
 		attributes.put("active", true);
 		attributes.put("exp", accessToken.getExpiration().getTime());
-		attributes.put("scope", accessToken.getScope().stream().collect(Collectors.joining(" ")));
+		attributes.put("scope", String.join(" ", accessToken.getScope()));
 		attributes.put("sub", authentication.getName());
 
 		return attributes;

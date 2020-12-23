@@ -1,22 +1,21 @@
 package org.iahsnil.gateway.admin.events;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.iahsnil.gateway.admin.config.BusConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
 @Component
 @Slf4j
+@AllArgsConstructor
 public class EventSender {
 
-    @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Autowired
     private MessageConverter messageConverter;
 
     @PostConstruct

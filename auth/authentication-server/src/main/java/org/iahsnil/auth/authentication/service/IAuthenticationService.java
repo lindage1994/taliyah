@@ -9,7 +9,7 @@ public interface IAuthenticationService {
     /**
      * 校验权限
      *
-     * @param authRequest
+     * @param authRequest 包装后的request
      * @return 是否有权限
      */
     boolean decide(HttpServletRequest authRequest);

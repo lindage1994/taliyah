@@ -14,14 +14,14 @@ public interface AuthProvider {
     /**
      * 调用签权服务，判断用户是否有权限
      *
-     * @param authentication
-     * @param url
-     * @param method
+     * @param authentication header token
+     * @param url uri
+     * @param method method
      * @return <pre>
      * Result:
      * {
      *   code:"000000"
-     *   mesg:"请求成功"
+     *   message:"请求成功"
      *   data: true/false
      * }
      * </pre>
@@ -34,9 +34,9 @@ public interface AuthProvider {
         /**
          * 降级统一返回无权限
          *
-         * @param authentication
-         * @param url
-         * @param method
+         * @param authentication header token
+         * @param url uri
+         * @param method method
          * @return <pre>
          * Result:
          * {

@@ -3,7 +3,6 @@ package org.iahsnil.auth.authentication.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.iahsnil.auth.authentication.po.Resource;
 import org.iahsnil.auth.authentication.service.IAuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +20,11 @@ public class AuthenticationService implements IAuthenticationService {
      */
     public static final String NONEXISTENT_URL = "NONEXISTENT_URL";
 
-    @Autowired
-    private ResourceService resourceService;
+    private final ResourceService resourceService;
+
+    public AuthenticationService(ResourceService resourceService) {
+        this.resourceService = resourceService;
+    }
 
     /**
      * @param authRequest 访问的url,method
@@ -45,10 +47,6 @@ public class AuthenticationService implements IAuthenticationService {
 
     /**
      * url对应资源与用户拥有资源进行匹配
-     *
-     * @param urlConfigAttribute
-     * @param userResources
-     * @return
      */
     public boolean isMatch(ConfigAttribute urlConfigAttribute, Set<Resource> userResources) {
         return userResources.stream().anyMatch(resource -> resource.getCode().equals(urlConfigAttribute.getAttribute()));
@@ -56,9 +54,6 @@ public class AuthenticationService implements IAuthenticationService {
 
     /**
      * 根据用户所被授予的角色，查询到用户所拥有的资源
-     *
-     * @param username
-     * @return
      */
     private Set<Resource> findResourcesByUsername(String username) {
         //用户被授予的角色资源

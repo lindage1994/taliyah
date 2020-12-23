@@ -16,8 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class AuthenticationController {
 
-    @Autowired
-    IAuthenticationService authenticationService;
+    final IAuthenticationService authenticationService;
+
+    public AuthenticationController(IAuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @ApiOperation(value = "权限验证", notes = "根据用户token，访问的url和method判断用户是否有权限访问")
     @ApiImplicitParams({
